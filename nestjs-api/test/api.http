@@ -1,0 +1,1 @@
+GET http://localhost:3000/places?text=Rua porto feliz, Santana de parnaiba, 41
