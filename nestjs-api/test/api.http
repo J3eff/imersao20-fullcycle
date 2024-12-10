@@ -9,3 +9,19 @@ GET http://localhost:3000/places?text=Av bento da Silva BUeno, 1379, Cajamar
 
 ###
 GET http://localhost:3000/directions?originId={{ originId }}&destinationId={{destinationId}}
+
+###
+POST http://localhost:3000/routes
+Content-Type: application/json
+
+{
+    "name": "Casa da minha mãe",
+    "source_id": "{{ originId }}",
+    "destination_id": "{{ destinationId }}"
+}
+
+###
+GET http://localhost:3000/routes
+
+###
+GET http://localhost:3000/routes/675871a2d2c6100f8467a072

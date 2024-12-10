@@ -16,7 +16,7 @@ datasource db {
 model Route {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  surce       Place
+  source      Place
   destination Place
   distance    Float
   durantion   Float
