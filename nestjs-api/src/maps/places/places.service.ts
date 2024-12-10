@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Client, PlaceInputType } from '@googlemaps/google-maps-services-js';
+import {
+  Client as GoogleMapsClient,
+  PlaceInputType,
+} from '@googlemaps/google-maps-services-js';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PlacesService {
   constructor(
-    private googleMapsClient: Client,
+    private googleMapsClient: GoogleMapsClient,
     private configService: ConfigService,
   ) {}
 

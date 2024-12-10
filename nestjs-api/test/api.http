@@ -1,1 +1,11 @@
-GET http://localhost:3000/places?text=Rua porto feliz, Santana de parnaiba, 41
+GET http://localhost:3000/places?text=Av das conchas, 905, Sao Pedro
+
+###
+GET http://localhost:3000/places?text=Av bento da Silva BUeno, 1379, Cajamar
+###
+
+@originId = ChIJpSBd5jMdz5QRBxUsl_bVkJM
+@destinationId = ChIJy9ZNGqvizpQRHYnhUPIcOp4
+
+###
+GET http://localhost:3000/directions?originId={{ originId }}&destinationId={{destinationId}}
