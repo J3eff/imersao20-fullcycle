@@ -6,7 +6,7 @@ export class PlacesController {
   constructor(private readonly placesService: PlacesService) {}
 
   @Get()
-  async findPlaces(@Query() text: string) {
+  async findPlaces(@Query('text') text: string) {
     return await this.placesService.findPlaces(text);
   }
 }
