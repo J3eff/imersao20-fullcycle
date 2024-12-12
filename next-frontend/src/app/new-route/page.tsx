@@ -4,7 +4,13 @@ export async function createRouteAction(formData: FormData) {
   const { sourceId, destinationId } = Object.fromEntries(formData);
 
   const directionsResponse = await fetch(
-    `http://localhost:3000/directions?originId=${sourceId}&destinationId=${destinationId}`
+    `http://localhost:3000/directions?originId=${sourceId}&destinationId=${destinationId}`,
+    {
+      // cache: "force-cache", // default
+      // next: {
+      //   revalidate: 10, // 10 segundos
+      // },
+    }
   );
 
   if (!directionsResponse.ok) throw new Error("Failed to fetch directions");
@@ -21,8 +27,14 @@ export async function createRouteAction(formData: FormData) {
     },
     body: JSON.stringify({
       name: `${startAddress} - ${endAddress}`,
-      source_id: directionsData.request.origin.place_id.replace("place_id:", ""),
-      destination_id: directionsData.request.destination.place_id.replace("place_id:", ""),
+      source_id: directionsData.request.origin.place_id.replace(
+        "place_id:",
+        ""
+      ),
+      destination_id: directionsData.request.destination.place_id.replace(
+        "place_id:",
+        ""
+      ),
     }),
   });
 
@@ -31,7 +43,12 @@ export async function createRouteAction(formData: FormData) {
 
 export async function searchDirections(source: string, destination: string) {
   const [sourceResponse, destinationResponse] = await Promise.all([
-    fetch(`http://localhost:3000/places?text=${source}`),
+    fetch(`http://localhost:3000/places?text=${source}`, {
+      // cache: "force-cache", // default
+      // next: {
+      //   revalidate: 10 // 10 segundos
+      // }
+    }),
     fetch(`http://localhost:3000/places?text=${destination}`),
   ]);
 
@@ -49,7 +66,13 @@ export async function searchDirections(source: string, destination: string) {
   const placeDestinationId = destinationData.candidates[0].place_id;
 
   const directionsResponse = await fetch(
-    `http://localhost:3000/directions?originId=${placeSourceId}&destinationId=${placeDestinationId}`
+    `http://localhost:3000/directions?originId=${placeSourceId}&destinationId=${placeDestinationId}`,
+    {
+      // cache: "force-cache", // default
+      // next: {
+      //   revalidate: 10 // 10 segundos
+      // }
+    }
   );
 
   if (!directionsResponse.ok) throw new Error("Failed to fetch directions");
