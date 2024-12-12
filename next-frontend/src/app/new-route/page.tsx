@@ -1,3 +1,34 @@
+export async function createRouteAction(formData: FormData) {
+  "use server";
+
+  const { sourceId, destinationId } = Object.fromEntries(formData);
+
+  const directionsResponse = await fetch(
+    `http://localhost:3000/directions?originId=${sourceId}&destinationId=${destinationId}`
+  );
+
+  if (!directionsResponse.ok) throw new Error("Failed to fetch directions");
+
+  const directionsData = await directionsResponse.json();
+
+  const startAddress = directionsData.routes[0].legs[0].start_address;
+  const endAddress = directionsData.routes[0].legs[0].end_address;
+
+  const response = await fetch("http://localhost:3000/routes", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: `${startAddress} - ${endAddress}`,
+      source_id: directionsData.request.origin.place_id.replace("place_id:", ""),
+      destination_id: directionsData.request.destination.place_id.replace("place_id:", ""),
+    }),
+  });
+
+  if (!response.ok) throw new Error("Failed to fetch directions");
+}
+
 export async function searchDirections(source: string, destination: string) {
   const [sourceResponse, destinationResponse] = await Promise.all([
     fetch(`http://localhost:3000/places?text=${source}`),
@@ -106,7 +137,7 @@ export async function NewRoutePage({
                 <strong>Destino:</strong>{" "}
                 {directionsData.routes[0].legs[0].end_address}
               </li>
-              <li className="mb-2">                
+              <li className="mb-2">
                 <strong>Distância:</strong>{" "}
                 {directionsData.routes[0].legs[0].distance.text}
               </li>
@@ -115,6 +146,29 @@ export async function NewRoutePage({
                 {directionsData.routes[0].legs[0].duration.text}
               </li>
             </ul>
+            <form action={createRouteAction}>
+              {placeSourceId && (
+                <input
+                  type="hidden"
+                  name="sourceId"
+                  defaultValue={placeSourceId}
+                />
+              )}
+              {placeDestinationId && (
+                <input
+                  type="hidden"
+                  name="destinationId"
+                  defaultValue={placeDestinationId}
+                />
+              )}
+
+              <button
+                type="submit"
+                className="bg-main text-primary font-bold p-2 rounded mt-4"
+              >
+                Adicionar rota
+              </button>
+            </form>
           </div>
         )}
       </div>
@@ -124,3 +178,5 @@ export async function NewRoutePage({
 }
 
 export default NewRoutePage;
+
+// server action - endpoint do lado server do next.js - mutações
